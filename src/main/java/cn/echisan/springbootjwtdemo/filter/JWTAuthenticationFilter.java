@@ -4,6 +4,7 @@ import cn.echisan.springbootjwtdemo.entity.JwtUser;
 import cn.echisan.springbootjwtdemo.model.LoginUser;
 import cn.echisan.springbootjwtdemo.utils.JwtTokenUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import net.sf.json.JSONObject;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -16,6 +17,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -72,7 +74,14 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         // 返回创建成功的token
         // 但是这里创建的token只是单纯的token
         // 按照jwt的规定，最后请求的时候应该是 `Bearer token`
-        response.setHeader("token", JwtTokenUtils.TOKEN_PREFIX + token);
+        PrintWriter printWriter = response.getWriter();
+
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("token",JwtTokenUtils.TOKEN_PREFIX + token);
+
+        //response.setHeader("token", JwtTokenUtils.TOKEN_PREFIX + token);
+        printWriter.write(jsonObject.toString());
+        printWriter.flush();
     }
 
     @Override
